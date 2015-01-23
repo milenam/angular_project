@@ -1,47 +1,95 @@
 <!doctype html>
 <html ng-app="myApp">
-<head>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.js"></script>
-  <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-</head>
-<body>
-<div ng-controller='MyController'>
-  <form novalidate class="form-group">
-    <row class="col-md-12">
-     	<div class="col-md-4"> 
-     		Url: <input type="text" ng-model="url.url" />
-        </div>
-        <div class="col-md-4"> 
-            Campaign content: <input type="text" ng-model="url.content" />
-        </div>
-        <div class="col-md-4"> 
-            Campaign: <input type="text" ng-model="url.campaign" />
-        </div>
-    </row>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  </head>
+  <body>
+  <div ng-controller='MyController'>
+    <form novalidate class="form-group">
+      <row class="col-md-12">
+        <div class="col-md-4">
+          Url: <input type="text" ng-model="url.url" />
+          </div>
+          <div class="col-md-4">
+              Campaign content: <input type="text" ng-model="url.content" />
+          </div>
+          <div class="col-md-4">
+              Campaign: <input type="text" ng-model="url.campaign" />
+          </div>
+      </row>
 
-    <input type="submit" ng-click="displayUrl(url)" value="submit" class="btn btn-primary"/>
+      <input type="submit" data-display-urls='true' data-foo='it2' value="submit" class="btn btn-primary"/>
 
-  </form>
-  <pre>{{result_graph}}</pre>
-  <pre>{{result_text}}</pre>
-  <pre>{{result_cta}}</pre>
-</div>
-  <script>
-    angular.module('myApp', []) 
-    .controller('MyController', ['$scope', function($scope) {
-        $scope.result_grap;
-        $scope.result_text;
-        $scope.result_cta;
+    </form>
+    <pre> {{ url | json }} </pre>
+    <pre>{{result_graph}}</pre>
+    <pre>{{result_text}}</pre>
+    <pre>{{result_cta}}</pre>
+  </div>
 
-      $scope.displayUrl = function(url) {
-        $scope.result_graph = $scope.url.url + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.url.content + "-graph&utm_campaign=" + $scope.url.campaign;
-        $scope.result_text = $scope.url.url + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.url.content + "-text&utm_campaign=" + $scope.url.campaign;
-        $scope.result_cta = $scope.url.url + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.url.content + "-cta&utm_campaign=" + $scope.url.campaign;
-      };
-       }]);
-       
- 
-  </script>
+  <div ng-controller='MyOtherController'>
+    <form novalidate class="form-group">
+      <row class="col-md-12">
+        <div class="col-md-4">
+          Url: <input type="text" ng-model="url.url" />
+          </div>
+          <div class="col-md-4">
+              Campaign content: <input type="text" ng-model="url.content" />
+          </div>
+          <div class="col-md-4">
+              Campaign: <input type="text" ng-model="url.campaign" />
+          </div>
+      </row>
 
-</body>
+      <input type="submit" data-foo='it' data-display-urls='true' value="submit" class="btn btn-primary"/>
+
+    </form>
+    <pre> {{ url | json }} </pre>
+    <pre>{{result_graph}}</pre>
+    <pre>{{result_text}}</pre>
+    <pre>{{result_cta}}</pre>
+  </div>
+    <script>
+      angular.module('myApp', [])
+      .controller('MyOtherController', ['$scope', function($scope) {
+        $scope.displayUrl = function() {
+          console.log('hello again');
+        };
+      }])
+      .controller('MyController', ['$scope', function($scope) {
+          $scope.result_grap;
+          $scope.result_text;
+          $scope.result_cta;
+
+          $scope.foo = 'hi';
+
+
+        $scope.displayUrl = function() {
+          $scope.result_graph = $scope.url.url + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.url.content + "-graph&utm_campaign=" + $scope.url.campaign;
+          $scope.result_text =  $scope.url.url + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.url.content + "-text&utm_campaign=" + $scope.url.campaign;
+          $scope.result_cta =   $scope.url.url + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.url.content + "-cta&utm_campaign=" + $scope.url.campaign;
+        };
+       }])
+      .directive('displayUrls', function() {
+          var foo = function(foo) {
+            console.log('hi', foo);
+          };
+        return {
+          scope: {
+            foo: '@'
+          },
+          link: function(scope, ele, attrs){
+            ele.bind('click', function() {
+
+              foo(scope.foo);
+              //scope.displayUrl();
+              //scope.$apply();
+            });
+          }
+        };
+      });
+    </script>
+
+  </body>
 </html>
