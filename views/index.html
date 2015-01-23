@@ -5,13 +5,22 @@
 </head>
 <body>
 
-  <div ng-controller='MyController'><input type="text" ng-model="myUrl" /> <p>{{ myUrl }}</p></div>
+  <form ng-controller='MyController'>
+
+  <input type="text" ng-model="myUrl" /> 
+  </form>
 
   <script>
     angular.module('myApp', []) 
-    .controller('MyController', function($scope){
+    .controller('MyController', ['$scope', function($scope) {
+        $scope.urls = {};
+
+      $scope.displayUrl = function(user) {
+        $scope.urls = angular.copy(user);
+      };
+       }]);
        
-    })
+ 
   </script>
 
 </body>
