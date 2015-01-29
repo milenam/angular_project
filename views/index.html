@@ -9,22 +9,26 @@
     <form novalidate class="form-group">
       <row class="col-md-12">
         <div class="col-md-4">
-          Url: <input type="text" ng-model="url" ng-list/>
+          Url: <input type="text" ng-model="url.url" ng-list=""/>
           </div>
           <div class="col-md-4">
-              Campaign content: <input type="text" ng-model="content" ng-list/>
+              Campaign content: <input type="text" ng-model="url.content" ng-list=""/>
           </div>
           <div class="col-md-4">
-              Campaign: <input type="text" ng-model="campaign"/>
+              Campaign: <input type="text" ng-model="url.campaign"/>
           </div>
       </row>
 
       <input type="submit" data-display-urls='true' value="submit" class="btn btn-primary"/>
 
     </form>
-    <pre> {{ url[1] | json }} </pre>
+    <pre> {{ url | json }} </pre>
     <pre> {{ content | json }} </pre>
-    <pre>{{full_result}}</pre>
+    <div ng-repeat="(key, value) in url">
+      <div ng-repeat="x in value">
+      <pre>{{x}}?utm_source=weekly-email&utm_medium=email&utm_content=</pre>
+    </div>
+    </div>
     <pre>{{result_text}}</pre>
     <pre>{{result_cta}}</pre>
   </div>
@@ -41,16 +45,19 @@
 
         $scope.displayUrl = function() {
 
-          // for (var i = 0; i < $scope.url.length; i++) {
-          //     $scope.result_graph = $scope.url[i] + "?utm_source=weekly-email&utm_medium=email&utm_content=";
-          // }
+          $scope.url;
+          for (var i = 0; i < $scope.url.length; i++) {
+            var item = $scope.url[i];
+          }
 
-          $scope.result_graph = $scope.url.map(function (url){ return url + "?utm_source=weekly-email&utm_medium=email&utm_content=";});
+          console.log(item);
 
-          var items = $scope.result_graph.toString();
-          var some = items.split(',').map(function(items){return String(items);});
+          // $scope.result_graph = $scope.url.map(function (url){ return url + "?utm_source=weekly-email&utm_medium=email&utm_content=";});
+
+          // var items = $scope.result_graph.toString();
+          // var some = items.split(',').map(function(items){return String(items);});
         
-          $scope.full_result = String(items);
+          // $scope.full_result = String(items);
 
           // console.log(typeof some);
           // for (var i=0; items.length; i++) {
