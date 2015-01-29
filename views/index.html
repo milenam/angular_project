@@ -9,13 +9,13 @@
     <form novalidate class="form-group">
       <row class="col-md-12">
         <div class="col-md-4">
-          Url: <input type="text" ng-model="url.url" ng-list=""/>
+          Url: <input type="text" ng-model="url" ng-list=""/>
           </div>
           <div class="col-md-4">
-              Campaign content: <input type="text" ng-model="url.content" ng-list=""/>
+              Campaign content: <input type="text" ng-model="content" ng-list=""/>
           </div>
           <div class="col-md-4">
-              Campaign: <input type="text" ng-model="url.campaign"/>
+              Campaign: <input type="text" ng-model="campaign"/>
           </div>
       </row>
 
@@ -24,13 +24,7 @@
     </form>
     <pre> {{ url | json }} </pre>
     <pre> {{ content | json }} </pre>
-    <div ng-repeat="(key, value) in url">
-      <div ng-repeat="x in value">
-      <pre>{{x}}?utm_source=weekly-email&utm_medium=email&utm_content=</pre>
-    </div>
-    </div>
-    <pre>{{result_text}}</pre>
-    <pre>{{result_cta}}</pre>
+    <pre>{{result_graph | json}}</pre>
   </div>
     <script>
       angular.module('myApp', [])
@@ -43,14 +37,29 @@
           $scope.foo = 'hi';
 
 
+          $scope._appendUtmJunk = function(j) {
+            return $scope.url[j] + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.content[j] + "-text&utm_campaign=" + $scope.campaign;
+          };
+
         $scope.displayUrl = function() {
 
           $scope.url;
+          $scope.result_graph = [];
+
+          // TODO: raise error if url and content are not the same length
+          // TODO: display URL for text, graph and CTA
+          // TODO: change form elements to display multiple URLs / contents more easily (text area?)
+          // TODO: display new formed urls without bracket or comma (hint: ng-repeat)
+          // TODO: use the map function to push the new string on the result_graph array
+
           for (var i = 0; i < $scope.url.length; i++) {
-            var item = $scope.url[i];
+            var url_string = $scope._appendUtmJunk(i);
+            $scope.result_graph.push( url_string );
           }
 
-          console.log(item);
+          // 0
+          // 1
+          // 2
 
           // $scope.result_graph = $scope.url.map(function (url){ return url + "?utm_source=weekly-email&utm_medium=email&utm_content=";});
 
