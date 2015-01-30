@@ -9,7 +9,7 @@
     <form novalidate class="form-group">
       <row class="col-md-12">
         <div class="col-md-4">
-          Url: <input type="text" ng-model="url" ng-list=""/>
+          Url: <input type="text" ng-model="url" ng-list=""/><p class="error">{{error}}</p>
           </div>
           <div class="col-md-4">
               Campaign content: <input type="text" ng-model="content" ng-list=""/>
@@ -38,7 +38,7 @@
 
 
           $scope._appendUtmJunk = function(j) {
-            return $scope.url[j] + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.content[j] + "-text&utm_campaign=" + $scope.campaign;
+            return $scope.url[j] + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.content[j] + "-graph&utm_campaign=" + $scope.campaign;
           };
 
         $scope.displayUrl = function() {
@@ -56,6 +56,11 @@
             var url_string = $scope._appendUtmJunk(i);
             $scope.result_graph.push( url_string );
           }
+
+          if ( $scope.url.length !== $scope.content.length) {
+               
+               $scope.error = "url and content has to be the same length"
+            }
 
           // 0
           // 1
@@ -96,3 +101,8 @@
 
   </body>
 </html>
+<style>
+ .error {
+  color: red;
+ }
+</style>
