@@ -25,9 +25,16 @@
     <pre> {{ url | json }} </pre>
     <pre> {{ content | json }} </pre>
     <h1>URLS</h1>
-      <ul><li ng-repeat="item in result_graph" ng-class-odd="'odd'" ng-class-even="'even'"><p ng-repeat="x in item">{{x}}</p></li></ul>
+    <ul>
+      <li ng-repeat="items in result_graph" ng-class-odd="'odd'" ng-class-even="'even'">
+        <p ng-repeat="url in items"> {{url}} </p>
+      </li>
+    </ul>
   </div>
     <script>
+      // TODO: Better Styling
+      // TODO: Render URLs onblur for each form element (hint: use directive)
+      // TODO: Put the style tag in the right place
       angular.module('myApp', [])
       .controller('MyController', ['$scope', function($scope) {
           $scope.result_graph;
@@ -39,8 +46,16 @@
 
 
           $scope._appendUtmJunk = function(j) {
-            return [$scope.url[j] + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.content[j] + "-graph&utm_campaign=" + $scope.campaign, $scope.url[j] + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.content[j] + "-texth&utm_campaign=" + $scope.campaign,$scope.url[j] + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.content[j] + "-cta&utm_campaign=" + $scope.campaign];
-          
+            var appends = ["-graph", "-text", "-cta"];
+            var arr = []
+
+            for (var i = 0, l = appends.length; i < l; i ++) {
+              var v = appends[i];
+              arr.push(
+                $scope.url[j] + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.content[j] + v + "&utm_campaign=" + $scope.campaign
+              )
+            }
+            return arr;
           };
 
         $scope.displayUrl = function() {
@@ -50,45 +65,13 @@
 
           if ( $scope.url.length == $scope.content.length){
             for (var i = 0; i < $scope.url.length; i++) {
-              var url_string = $scope._appendUtmJunk(i);
-              console.log(url_string)
-              $scope.result_graph.push( url_string );
+              var url_arr = $scope._appendUtmJunk(i);
+              $scope.result_graph.push( url_arr );
             }
-            $scope.error_display = false; 
+            $scope.error_display = false;
           } else {
             $scope.error_display = true;
           }
-
-          // DONE: raise error if url and content are not the same length
-          // DONE: display URL for text, graph and CTA
-          // DONE: change form elements to display multiple URLs / contents more easily (text area?)
-          // DONE: display new formed urls without bracket or comma (hint: ng-repeat)
-          // TODO: use the map function to push the new string on the result_graph array
-
-
-          // 0
-          // 1
-          // 2
-
-          // $scope.result_graph = $scope.url.map(function (url){ return url + "?utm_source=weekly-email&utm_medium=email&utm_content=";});
-
-          // var items = $scope.result_graph.toString();
-          // var some = items.split(',').map(function(items){return String(items);});
-        
-          // $scope.full_result = String(items);
-
-          // console.log(typeof some);
-          // for (var i=0; items.length; i++) {
-          //    console.log(some[i]);
-
-          // }
-          //   $scope.full_result = s[i];
-          // }
-      
-          // $scope.result_graph = $scope.url + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.content + "-graph&utm_campaign=" + $scope.campaign;
-          $scope.result_text =  $scope.url+ "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.content + "-text&utm_campaign=" + $scope.campaign;
-          $scope.result_cta =   $scope.url + "?utm_source=weekly-email&utm_medium=email&utm_content=" + $scope.content + "-cta&utm_campaign=" + $scope.campaign;
-      
         };
        }])
       .directive('displayUrls', function() {
