@@ -1,6 +1,42 @@
 <!doctype html>
 <html ng-app="myApp">
   <head>
+    <style>
+
+      textarea {
+        width: 350px;
+        height: 200px;
+        border: 2px dotted #ccc;
+      }
+
+      input {
+        border: 2px dotted #ccc;
+      }
+
+      ul {
+        padding-left: 0px;
+      }
+
+      .odd {
+        background-color: #ffeeff;
+        font-weight: bold;
+      }
+
+      .even {
+        background-color: #ddeeff;
+        font-weight: bold;
+      }
+
+      li {
+        list-style: none;
+        padding-left: 30px;
+      }
+
+     .error {
+      color: red;
+     }
+
+</style>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.js"></script>
     <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
   </head>
@@ -12,21 +48,19 @@
           Url: <textarea type="text" ng-model="url" ng-list=""></textarea><p ng-show="error_display" class="error">url and content has to be the same length</p>
           </div>
           <div class="col-md-4">
-              Campaign content: <input type="text" ng-model="content" ng-list=""/>
+              Campaign content: <input type="text" ng-model="content" ng-list="" ng-change="displayUrl()"/>
           </div>
           <div class="col-md-4">
-              Campaign: <input type="text" ng-model="campaign"/>
+              Campaign: <input type="text" ng-model="campaign" ng-change="displayUrl()"/>
           </div>
       </row>
-
-      <input type="submit" data-display-urls='true' value="submit" class="btn btn-primary"/>
 
     </form>
     <pre> {{ url | json }} </pre>
     <pre> {{ content | json }} </pre>
     <h1>URLS</h1>
     <ul>
-      <li ng-repeat="items in result_graph" ng-class-odd="'odd'" ng-class-even="'even'">
+      <li ng-repeat="items in result_graph" ng-class-odd="'odd'" ng-class-even="'even'" data-display-urls='true'>
         <p ng-repeat="url in items"> {{url}} </p>
       </li>
     </ul>
@@ -74,53 +108,20 @@
           }
         };
        }])
-      .directive('displayUrls', function() {
-        return {
-          link: function(scope, ele, attrs){
-            ele.bind('click', function() {
-              scope.displayUrl();
-              scope.$apply();
-            });
-          }
-        };
-      });
+      // .directive('displayUrls', function() {
+      //   return {
+      //     link: function(scope, ele, attrs){
+      //       ele.bind('blur', function() {
+      //         var currentValue = ele.val();
+      //         if (scope.value !== currentValue) {
+      //         scope.displayUrl();
+      //         scope.$apply();
+      //         };
+      //       });
+      //     }
+      //   };
+      // });
     </script>
 
   </body>
 </html>
-<style>
-
-  textarea {
-    width: 350px;
-    height: 200px;
-    border: 2px dotted #ccc;
-  }
-
-  input {
-    border: 2px dotted #ccc;
-  }
-
-  ul {
-    padding-left: 0px;
-  }
-
-  .odd {
-    background-color: #ffeeff;
-    font-weight: bold;
-  }
-
-  .even {
-    background-color: #ddeeff;
-    font-weight: bold;
-  }
-
-  li {
-    list-style: none;
-    padding-left: 30px;
-  }
-
- .error {
-  color: red;
- }
-
-</style>
