@@ -2,34 +2,90 @@
 <html ng-app="myApp">
   <head>
     <style>
+      body {
+        background: url('coffee-background.jpg') no-repeat center center fixed;;
+        background-size: cover;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        font-family: "Comic Sans MS", cursive, sans-serif;
+      }
+
+      .container {
+        max-width: 60em;
+        margin: 0 auto;
+        display: block;
+      }
+
+      .form-wrapper {
+        max-width: 40em;
+        margin: 0 auto;
+        display: block;
+      }
 
       textarea {
-        width: 350px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 100%;
         height: 200px;
-        border: 2px dotted #ccc;
+        font-size: 16px;
+        max-height: 200px;
+        min-height: 200px;
+        border-radius: 10px;
+        box-shadow: inset 4px 0px 10px 0px #ABABAB;
+        -webkit-box-shadow: inset 4px 0px 10px 0px #ABABAB;
+        -moz-box-shadow: inset 4px 0px 10px 0px #ABABAB;
+        -o-box-shadow: inset 4px 0px 10px 0px #ABABAB;
+        border: none;
+        padding: 10px 0px 0px 10px;
       }
 
       input {
-        border: 2px dotted #ccc;
+        width: 100%;
+        border-radius: 10px;
+        height: 40px;
+        font-size: 16px;
+        box-shadow:inset 0 0 5px 5px #888;
+        background: #fff;
+        box-shadow: inset 4px 0px 10px 0px #ABABAB;
+        -webkit-box-shadow: inset 4px 0px 10px 0px #ABABAB;
+        -moz-box-shadow: inset 4px 0px 10px 0px #ABABAB;
+        -o-box-shadow: inset 4px 0px 10px 0px #ABABAB;
+        border: none;
+        padding-left: 10px;
+      }
+
+      .text-center {
+        text-align: center;
       }
 
       ul {
         padding-left: 0px;
       }
 
+      h1 {
+        text-align: center;
+      }
+
       .odd {
-        background-color: #ffeeff;
+        background-color: #e0f0fd;
         font-weight: bold;
+
       }
 
       .even {
-        background-color: #ddeeff;
+        background-color: #c8b9a4;
         font-weight: bold;
       }
 
       li {
         list-style: none;
         padding-left: 30px;
+        padding: 10px;
+        -webkit-box-shadow: 10px 10px 23px -7px rgba(0,0,0,0.44);
+        -moz-box-shadow: 10px 10px 23px -7px rgba(0,0,0,0.44);
+        box-shadow: 10px 10px 23px -7px rgba(0,0,0,0.44);
+        margin-bottom: 20px;
       }
 
      .error {
@@ -38,26 +94,24 @@
 
 </style>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.js"></script>
-    <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
   </head>
   <body>
   <div ng-controller='MyController' class="container">
-    <form novalidate class="form-group">
-      <row class="col-md-12">
-        <div class="col-md-4">
-          Url: <textarea type="text" ng-model="url" ng-list=""></textarea><p ng-show="error_display" class="error">url and content has to be the same length</p>
+    <div class="form-wrapper">
+      <form novalidate class="form-group">
+        <div class="columns">
+          <p class="text-center">Please Enter Url:</p> <textarea type="text" ng-model="url" ng-list=""></textarea><p ng-show="error_display" class="error">url and content has to be the same length</p>
           </div>
-          <div class="col-md-4">
-              Campaign content: <input type="text" ng-model="content" ng-list="" ng-change="displayUrl()"/>
+          <div class="columns"> 
+              <p class="text-center">Please Enter Campaign content:</p> <input type="text" ng-model="content" ng-list="" ng-change="displayUrl()"/>
           </div>
-          <div class="col-md-4">
-              Campaign: <input type="text" ng-model="campaign" ng-change="displayUrl()"/>
+          <div class="columns">
+              <p class="text-center">Please Enter Campaign:</p> <input type="text" ng-model="campaign" ng-change="displayUrl()"/>
           </div>
-      </row>
-
-    </form>
-    <pre> {{ url | json }} </pre>
-    <pre> {{ content | json }} </pre>
+      </form>
+    </div>
+    <!-- <pre> {{ url | json }} </pre>
+    <pre> {{ content | json }} </pre> -->
     <h1>URLS</h1>
     <ul>
       <li ng-repeat="items in result_graph" ng-class-odd="'odd'" ng-class-even="'even'" data-display-urls='true'>
