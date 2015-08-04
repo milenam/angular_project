@@ -21,108 +21,161 @@
       max-width: 320px;
       background-image: url('todolist.jpg');
       background-repeat: no-repeat;
-      background-size: cover;
+      background-size: 100% 100%;
       margin: 0 auto;
       padding: 30px;
     }
 
     h1 {
-      margin-top: 30px;
+      margin-top: 25%;
       font-size: 28px;
       text-align: center;
+      margin-bottom: 0px;
     }
 
     h2 {
       text-align: center;
+      margin: 0px;
+    }
+
+    form {
+      text-align: center;
+    }
+
+    .new-task {
+      border-radius: 5px;
+      height: 30px;
+      padding-left: 5px;
+    }
+
+    .add-btn, .save-btn {
+      height: 30px;
+      background-color: #000;
+      color: #fff;
+      border: 1px solid #000;
+      cursor: pointer;
+      font-family: 'Handlee', cursive;
+    }
+
+    .save-btn {
+      font-size: 11px;
+      padding: 6px;
+      font-weight: normal;
     }
 
     ul {
       padding: 0px;
+      overflow: hidden;
+      margin-top: 10px;
+      margin-bottom: 35%;
     }
 
     ul li {
       list-style-type: circle;
       margin-left: 20px;
       font-size: 18px;
+      text-align: left;
+      font-weight: normal;
+      position: relative;
     }
+
     .hidden {
       display: none;
     }
+
     .error {
       color: red;
+      font-size: 12px;
     }
+
+    .pull-right {
+      text-align: right;
+    }
+
+    .pull-left {
+      float: left;
+    }
+
     </style>
   </head>
   <body>
   <div ng-controller='MyController' class="container">
     <h1>Create TODO List</h1>
-        <ul>
-          <li ng-repeat="item in todoList">
-             {{item.text}}
-             <label class="" for='{{item.text}}' ng-click="remove($index)">
-              &#10005;
-             </label>
-             <label class="" for='{{item.text}}' ng-click="edit($index)">
-              &#9998;
-             </label>
-
-
-          </li>
-        </ul>
-          <h2>Add New Task<h2>
-          <form action="" class="" ng-submit="addTask()">
-            <input class="" type="text" placeholder="Enter new task" ng-model="task">
-            <button class="">Add</button>
-          </form>
-          <p class="error hidden"> task can't be blank </p>
+    <h2>Add New Task</h2>
+    <form action="" class="" ng-submit="addTask()">
+      <input class="new-task" type="text" placeholder="Enter new task" ng-model="task">
+      <button class="add-btn">Add</button>
+      <span ng-show="showSave" class="save-btn" ng-click="save(task)">Save</span>
+    </form>
+    <p class="error hidden"> task can't be blank </p>
+    <ul>
+      <li ng-repeat="item in todoList">
+        <span class="pull-left">{{item.text}}</span>
+        <div class="pull-right">
+          <label class="" for='{{item.text}}' ng-click="remove($index)">
+            &#10005;
+          </label>
+          <label class="" for='{{item.text}}' ng-click="edit($index, item.text)">
+            &#9998;
+          </label>
+        </div>
+      </li>
+    </ul>
   </div>
-    <script>
-      angular.module('myApp', [])
-      .controller('MyController', ['$scope', function($scope) {
-          $scope.todoList = getDataFromLocalStorage(localStorage.getItem("listItems"));
+  <script>
+    angular.module('myApp', [])
+    .controller('MyController', ['$scope', function($scope) {
+      $scope.todoList = getDataFromLocalStorage(localStorage.getItem("listItems"));
+      $scope.task;
+      $scope.currentIndex;
 
-          $scope.task;
-    $scope.addTask = function () {
-      console.log($scope.task);
+      $scope.addTask = function () {
+        // checks if the value of the input field is not empty
         if ($scope.task != undefined) {
-
           $scope.todoList.push({ text: $scope.task });
           jsonToLocalStorage($scope.todoList);
-
           $('p').addClass('hidden');
         } else {
           $('p').removeClass('hidden');
         }
-    };
+        $scope.task = ''; // clears the input field after adding an item
+      };
 
 
-    $scope.remove = function (index) {
-
+      $scope.remove = function (index) {
         $scope.todoList.splice(index, 1);
         localStorage.removeItem(index);
-
         jsonToLocalStorage($scope.todoList);
+      };
 
-    };
+      $scope.edit = function (index, text) {
+        $scope.currentIndex = index;
+        $scope.showSave = true;
+        $scope.task = text;
+        jsonToLocalStorage($scope.todoList);
+      };
 
-    function getDataFromLocalStorage(stringValue) {
+      $scope.save = function (text) {
+        $scope.todoList[$scope.currentIndex].text = text;
+        jsonToLocalStorage($scope.todoList);
+        $scope.showSave = false;
+        $scope.task = '';
+      };
+
+      function getDataFromLocalStorage(stringValue) {
         return JSON.parse(stringValue) || [{text: 'first task'}];
+      }
 
-    }
-
-
-    function jsonToLocalStorage(todoList) {
+      function jsonToLocalStorage(todoList) {
         var jsonTask = angular.toJson(todoList); // Serializes input into a JSON-formatted string
-
         if (jsonTask != 'null') {
-            localStorage.setItem("listItems", jsonTask);
-            return localStorage.getItem("listItem");
+          localStorage.setItem("listItems", jsonTask);
+          return localStorage.getItem("listItem");
         } else {
-            alert("Invalid JSON!");
+          alert("Invalid JSON!");
         }
-    }
- }]);
+      }
+    }]);
     </script>
-
   </body>
 </html>
