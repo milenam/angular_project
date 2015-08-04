@@ -96,6 +96,10 @@
       float: left;
     }
 
+    .x, .ed {
+      cursor: pointer;
+    }
+
     </style>
   </head>
   <body>
@@ -104,7 +108,7 @@
     <h2>Add New Task</h2>
     <form action="" class="" ng-submit="addTask()">
       <input class="new-task" type="text" placeholder="Enter new task" ng-model="task">
-      <button class="add-btn">Add</button>
+      <button class="add-btn" ng-hide="showSave">Add</button>
       <span ng-show="showSave" class="save-btn" ng-click="save(task)">Save</span>
     </form>
     <p class="error hidden"> task can't be blank </p>
@@ -112,10 +116,10 @@
       <li ng-repeat="item in todoList">
         <span class="pull-left">{{item.text}}</span>
         <div class="pull-right">
-          <label class="" for='{{item.text}}' ng-click="remove($index)">
+          <label class="x" for='{{item.text}}' ng-click="remove($index)">
             &#10005;
           </label>
-          <label class="" for='{{item.text}}' ng-click="edit($index, item.text)">
+          <label class="ed" for='{{item.text}}' ng-click="edit($index, item.text)">
             &#9998;
           </label>
         </div>
@@ -124,8 +128,8 @@
   </div>
   <script>
     angular.module('myApp', [])
-    .controller('MyController', ['$scope', function($scope) {
-      $scope.todoList = getDataFromLocalStorage(localStorage.getItem("listItems"));
+    .controller('MyController', function($scope, $localStorage) {
+      $scope.todoList = $localStorage.getDataFromLocalStorage(localStorage.getItem("listItems"));
       $scope.task;
       $scope.currentIndex;
 
@@ -133,7 +137,7 @@
         // checks if the value of the input field is not empty
         if ($scope.task != undefined) {
           $scope.todoList.push({ text: $scope.task });
-          jsonToLocalStorage($scope.todoList);
+          $localStorage.jsonToLocalStorage($scope.todoList);
           $('p').addClass('hidden');
         } else {
           $('p').removeClass('hidden');
@@ -145,37 +149,39 @@
       $scope.remove = function (index) {
         $scope.todoList.splice(index, 1);
         localStorage.removeItem(index);
-        jsonToLocalStorage($scope.todoList);
+        $localStorage.jsonToLocalStorage($scope.todoList);
       };
 
       $scope.edit = function (index, text) {
         $scope.currentIndex = index;
         $scope.showSave = true;
         $scope.task = text;
-        jsonToLocalStorage($scope.todoList);
+        $localStorage.jsonToLocalStorage($scope.todoList);
       };
 
       $scope.save = function (text) {
         $scope.todoList[$scope.currentIndex].text = text;
-        jsonToLocalStorage($scope.todoList);
+        $localStorage.jsonToLocalStorage($scope.todoList);
         $scope.showSave = false;
         $scope.task = '';
       };
+    }).factory('$localStorage', function(){
+        return {
+          getDataFromLocalStorage: function(stringValue) {
+            return JSON.parse(stringValue) || [{text: 'first task'}];
+          },
 
-      function getDataFromLocalStorage(stringValue) {
-        return JSON.parse(stringValue) || [{text: 'first task'}];
-      }
-
-      function jsonToLocalStorage(todoList) {
-        var jsonTask = angular.toJson(todoList); // Serializes input into a JSON-formatted string
-        if (jsonTask != 'null') {
-          localStorage.setItem("listItems", jsonTask);
-          return localStorage.getItem("listItem");
-        } else {
-          alert("Invalid JSON!");
+          jsonToLocalStorage: function(todoList) {
+            var jsonTask = angular.toJson(todoList); // Serializes input into a JSON-formatted string
+            if (jsonTask != 'null') {
+              localStorage.setItem("listItems", jsonTask);
+              return localStorage.getItem("listItem");
+            } else {
+              alert("Invalid JSON!");
+            }
+          }
         }
-      }
-    }]);
+      });
     </script>
   </body>
 </html>
