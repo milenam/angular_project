@@ -1,0 +1,128 @@
+<!doctype html>
+<html ng-app="myApp">
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <!-- <link rel="stylesheet" type="text/css" href="../css/style.css"> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Handlee' rel='stylesheet' type='text/css'>
+    <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Handlee', cursive;
+    }
+
+    .container {
+      max-width: 320px;
+      background-image: url('todolist.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      margin: 0 auto;
+      padding: 30px;
+    }
+
+    h1 {
+      margin-top: 30px;
+      font-size: 28px;
+      text-align: center;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    ul {
+      padding: 0px;
+    }
+
+    ul li {
+      list-style-type: circle;
+      margin-left: 20px;
+      font-size: 18px;
+    }
+    .hidden {
+      display: none;
+    }
+    .error {
+      color: red;
+    }
+    </style>
+  </head>
+  <body>
+  <div ng-controller='MyController' class="container">
+    <h1>Create TODO List</h1>
+        <ul>
+          <li ng-repeat="item in todoList">
+             {{item.text}}
+             <label class="" for='{{item.text}}' ng-click="remove($index)">
+              &#10005;
+             </label>
+             <label class="" for='{{item.text}}' ng-click="edit($index)">
+              &#9998;
+             </label>
+
+
+          </li>
+        </ul>
+          <h2>Add New Task<h2>
+          <form action="" class="" ng-submit="addTask()">
+            <input class="" type="text" placeholder="Enter new task" ng-model="task">
+            <button class="">Add</button>
+          </form>
+          <p class="error hidden"> task can't be blank </p>
+  </div>
+    <script>
+      angular.module('myApp', [])
+      .controller('MyController', ['$scope', function($scope) {
+          $scope.todoList = getDataFromLocalStorage(localStorage.getItem("listItems"));
+
+          $scope.task;
+    $scope.addTask = function () {
+      console.log($scope.task);
+        if ($scope.task != undefined) {
+
+          $scope.todoList.push({ text: $scope.task });
+          jsonToLocalStorage($scope.todoList);
+
+          $('p').addClass('hidden');
+        } else {
+          $('p').removeClass('hidden');
+        }
+    };
+
+
+    $scope.remove = function (index) {
+
+        $scope.todoList.splice(index, 1);
+        localStorage.removeItem(index);
+
+        jsonToLocalStorage($scope.todoList);
+
+    };
+
+    function getDataFromLocalStorage(stringValue) {
+        return JSON.parse(stringValue) || [{text: 'first task'}];
+
+    }
+
+
+    function jsonToLocalStorage(todoList) {
+        var jsonTask = angular.toJson(todoList); // Serializes input into a JSON-formatted string
+
+        if (jsonTask != 'null') {
+            localStorage.setItem("listItems", jsonTask);
+            return localStorage.getItem("listItem");
+        } else {
+            alert("Invalid JSON!");
+        }
+    }
+ }]);
+    </script>
+
+  </body>
+</html>
