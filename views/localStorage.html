@@ -1,104 +1,124 @@
 <!doctype html>
 <html ng-app="myApp">
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
-    <!-- <link rel="stylesheet" type="text/css" href="../css/style.css"> -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.3/angular.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Handlee' rel='stylesheet' type='text/css'>
     <style>
-    * {
-      box-sizing: border-box;
-    }
+      * {
+        box-sizing: border-box;
+      }
 
-    body {
-      font-family: 'Handlee', cursive;
-    }
+      body {
+        font-family: 'Handlee', cursive;
+        background-image: url('http://milenamaltsev.com/images/bkg.jpg');
+        background-size: cover;
+      }
 
-    .container {
-      max-width: 320px;
-      background-image: url('todolist.jpg');
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-      margin: 0 auto;
-      padding: 30px;
-    }
+      .container {
+        max-width: 375px;
+        background-image: url('http://milenamaltsev.com/images/todolist.png');
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        margin: 0 auto;
+        padding: 30px;
+      }
 
-    h1 {
-      margin-top: 25%;
-      font-size: 28px;
-      text-align: center;
-      margin-bottom: 0px;
-    }
+      h1 {
+        margin-top: 25%;
+        font-size: 28px;
+        text-align: center;
+        margin-bottom: 0px;
+      }
 
-    h2 {
-      text-align: center;
-      margin: 0px;
-    }
+      h2 {
+        text-align: center;
+        margin: 0px;
+      }
 
-    form {
-      text-align: center;
-    }
+      form {
+        text-align: center;
+        overflow: hidden;
+        width: 247px;
+        margin: 0 auto;
+      }
 
-    .new-task {
-      border-radius: 5px;
-      height: 30px;
-      padding-left: 5px;
-    }
+      .new-task {
+        border-radius: 5px;
+        height: 35px;
+        padding-left: 5px;
+        font-size: 16px;
+        float: left;
+      }
 
-    .add-btn, .save-btn {
-      height: 30px;
-      background-color: #000;
-      color: #fff;
-      border: 1px solid #000;
-      cursor: pointer;
-      font-family: 'Handlee', cursive;
-    }
+      .add-btn, .save-btn {
+        height: 35px;
+        background-color: #000;
+        color: #fff;
+        border: 1px solid #000;
+        cursor: pointer;
+        font-family: 'Handlee', cursive;
+        font-size: 12px;
+        float: left;
+      }
 
-    .save-btn {
-      font-size: 11px;
-      padding: 6px;
-      font-weight: normal;
-    }
+      .save-btn {
+        font-size: 13px;
+        padding: 7px 8px;
+        font-weight: normal;
+        float: left;
+        margin-left: 3px;
+      }
 
-    ul {
-      padding: 0px;
-      overflow: hidden;
-      margin-top: 10px;
-      margin-bottom: 35%;
-    }
+      .clear {
+        clear: both;;
+      }
 
-    ul li {
-      list-style-type: circle;
-      margin-left: 20px;
-      font-size: 18px;
-      text-align: left;
-      font-weight: normal;
-      position: relative;
-    }
+      ol {
+        padding: 0px;
+        overflow: hidden;
+        margin-top: 10px;
+        margin-bottom: 35%;
 
-    .hidden {
-      display: none;
-    }
+      }
 
-    .error {
-      color: red;
-      font-size: 12px;
-    }
+      ol li {
+        list-style-type: circle;
+        margin-left: 30px;
+        font-size: 26px;
+        text-align: left;
+        font-weight: normal;
+        position: relative;
+      }
 
-    .pull-right {
-      text-align: right;
-    }
+      .hidden {
+        display: none;
+      }
 
-    .pull-left {
-      float: left;
-    }
+      .error {
+        color: red;
+        font-size: 12px;
+      }
 
-    .x, .ed {
-      cursor: pointer;
-    }
+      .pull-right {
+        text-align: right;
+        display: inline-block;
+        position: absolute;
+        right: 0px;       
+      }
+
+      .pull-left {
+        display: inline-block;
+        /*float: left;*/
+      }
+
+      .x, .ed {
+        cursor: pointer;
+     }
 
     </style>
   </head>
@@ -111,8 +131,9 @@
       <button class="add-btn" ng-hide="showSave">Add</button>
       <span ng-show="showSave" class="save-btn" ng-click="save(task)">Save</span>
     </form>
+    <div class="clear"></div>
     <p class="error hidden"> task can't be blank </p>
-    <ul>
+    <ol>
       <li ng-repeat="item in todoList">
         <span class="pull-left">{{item.text}}</span>
         <div class="pull-right">
@@ -124,48 +145,48 @@
           </label>
         </div>
       </li>
-    </ul>
+    </ol>
   </div>
-  <script>
-    angular.module('myApp', [])
-    .controller('MyController', function($scope, $localStorage) {
-      $scope.todoList = $localStorage.getDataFromLocalStorage(localStorage.getItem("listItems"));
-      $scope.task;
-      $scope.currentIndex;
+    <script>
+      angular.module('myApp', [])
+        .controller('MyController', function($scope, $localStorage) {
+        $scope.todoList = $localStorage.getDataFromLocalStorage($localStorage.getObj("listItems"));
+        $scope.task;
+        $scope.currentIndex;
 
-      $scope.addTask = function () {
-        // checks if the value of the input field is not empty
-        if ($scope.task != undefined) {
-          $scope.todoList.push({ text: $scope.task });
+        $scope.addTask = function () {
+          // checks if the value of the input field is not empty
+          if ($scope.task != undefined) {
+            $scope.todoList.push({ text: $scope.task });
+            $localStorage.jsonToLocalStorage($scope.todoList);
+            $('p').addClass('hidden');
+          } else {
+            $('p').removeClass('hidden');
+          }
+          $scope.task = ''; // clears the input field after adding an item
+        };
+
+
+        $scope.remove = function (index) {
+          $scope.todoList.splice(index, 1);
+          $localStorage.removeTask(index);
           $localStorage.jsonToLocalStorage($scope.todoList);
-          $('p').addClass('hidden');
-        } else {
-          $('p').removeClass('hidden');
-        }
-        $scope.task = ''; // clears the input field after adding an item
-      };
+        };
 
+        $scope.edit = function (index, text) {
+          $scope.currentIndex = index;
+          $scope.showSave = true;
+          $scope.task = text;
+          $localStorage.jsonToLocalStorage($scope.todoList);
+        };
 
-      $scope.remove = function (index) {
-        $scope.todoList.splice(index, 1);
-        localStorage.removeItem(index);
-        $localStorage.jsonToLocalStorage($scope.todoList);
-      };
-
-      $scope.edit = function (index, text) {
-        $scope.currentIndex = index;
-        $scope.showSave = true;
-        $scope.task = text;
-        $localStorage.jsonToLocalStorage($scope.todoList);
-      };
-
-      $scope.save = function (text) {
-        $scope.todoList[$scope.currentIndex].text = text;
-        $localStorage.jsonToLocalStorage($scope.todoList);
-        $scope.showSave = false;
-        $scope.task = '';
-      };
-    }).factory('$localStorage', function(){
+        $scope.save = function (text) {
+          $scope.todoList[$scope.currentIndex].text = text;
+          $localStorage.jsonToLocalStorage($scope.todoList);
+          $scope.showSave = false;
+          $scope.task = '';
+        };
+      }).factory('$localStorage', function(){
         return {
           getDataFromLocalStorage: function(stringValue) {
             return JSON.parse(stringValue) || [{text: 'first task'}];
@@ -174,11 +195,20 @@
           jsonToLocalStorage: function(todoList) {
             var jsonTask = angular.toJson(todoList); // Serializes input into a JSON-formatted string
             if (jsonTask != 'null') {
-              localStorage.setItem("listItems", jsonTask);
-              return localStorage.getItem("listItem");
+              this.setObj("listItems", jsonTask);
             } else {
               alert("Invalid JSON!");
             }
+          },
+          setObj: function(key, value) {
+            return localStorage.setItem(key, value);
+          },
+
+          getObj: function(key) {
+            return localStorage.getItem(key);
+          },
+          removeTask: function(index) {
+            return localStorage.removeItem(index);
           }
         }
       });
